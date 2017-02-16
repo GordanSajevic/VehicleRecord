@@ -1,0 +1,88 @@
+﻿@model VehicleRecord.Models.ReportModel
+
+@{
+    ViewBag.Title = "Index";
+}
+<br>
+<h2 class="topic-class">Izvještaj</h2>
+<br>
+<br>
+<p id="warningMessage" style="color: red; margin-left:80px;"></p>
+<div style="margin-left:270px;margin-bottom:30px;">
+@using (Html.BeginForm("Index", "Reports" ))
+{
+    var vehicles = Html.Raw(Json.Encode(Model.vehicles));
+    <select name="vehicleReportId" style="height:26px; width:180px;" required>
+        @foreach (var vehicle in Model.vehicles)
+        {
+            <option value="{{@vehicle.ID}}">@vehicle.Brand.BrandName @vehicle.BrandModel.ModelName @vehicle.ChassisNumber @vehicle.MotorNumber</option>
+            }
+    </select>
+
+    <input type="date" name="dateFromReport" style="width:130px" required>
+    <input type="time" name="timeFromReport" style="width:100px" required>
+    <input type="date" name="dateToReport" style="width:130px" required>
+    <input type="time" name="timeToReport" style="width:100px" required>
+    <input class="btn btn-primary" value="Filtriraj" type="submit" />
+}
+</div>
+
+<table class="table-heading" style="width:1150px; margin-left:80px;">
+    <tr>
+        <th>
+            <p>Vrijeme iznajmljivanja</p>
+        </th>
+        <th>
+            <p>Vrijeme povratka</p>
+        </th>
+        <th>
+            <p>Polazna lokacija</p>
+        </th>
+        <th>
+            <p>Dolazna lokacija</p>
+        </th>
+        <th>
+            <p>Ime vozača</p>
+        </th>
+        <th>
+            <p>Prezime vozača</p>
+        </th>
+        <th>
+            <p>Broj putnika</p>
+        </th>
+        <th>
+            <p>Status naloga</p>
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.reports) {
+    <tr class="table-rows" style="height:42px;"> 
+        <td>
+            @Html.DisplayFor(modelItem => item.DateFrom)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateTo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LocationFrom)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LocationTo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DriverName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DriverSurname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumberOfPassangers)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StatusName)
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,142 @@
+﻿@model VehicleRecord.Models.VehicleModel
+
+@{
+    ViewBag.Title = "Index";
+}
+<br>
+<h2 class="topic-class">Vozila</h2>
+<br>
+<br>
+<div ng-init="init(@Newtonsoft.Json.JsonConvert.SerializeObject(Model.brandModels))"></div>
+<p id="warningMessage" style="color: red; margin-left: 80px"></p>
+<table class="table" style="width:1170px; margin-left: 80px">
+    <tr class="table-heading">
+        <th>
+            <p>Marka vozila</p>
+        </th>
+        <th>
+            <p>Model vozila</p>
+        </th>
+        <th>
+            <p>Broj šasije</p>
+        </th>
+        <th>
+            <p>Broj motora</p>
+        </th>
+        <th>
+            <p>Snaga motora (kW)</p>
+        </th>
+        <th>
+            <p>Snaga motora (KS)</p>
+        </th>
+        <th>
+            <p>Vrsta goriva</p>
+        </th>
+        <th>
+            <p>Godište</p>
+        </th>
+        <th></th>
+    </tr>
+
+    <tr class="table-rows">
+        <td>
+            @{var brandModelList = Html.Raw(Json.Encode(Model.brandModels)); }
+            <select ng-model="selectedVehicle" ng-change="EnableBrandModels()" id="vehicleBrand" value="0" style="height:26px; width:100px;">
+                @foreach (var brand in Model.brands)
+                {
+                    <option value="{{@brand.ID}}">@brand.BrandName</option>
+                }
+            </select>
+        </td>
+        <td>
+            <select ng-model="selectedVehicleModel" id="vehicleBrandModel" ng-disabled="selectDisabled" ng-options="brandModel.ID as brandModel.ModelName for brandModel in brandModels" value="{{brandModel.ID}}" style="height:26px; width:100px;">
+            {{brandModel.ModelName}}
+            </select>
+            <input type="hidden" id="vehicleBrandModelHelp" value="{{selectedVehicleModel}}" />
+        </td>
+        <td>
+            <input type="number" id="chassisNumber" style="width:100px">
+        </td>
+        <td>
+            <input type="number" id="motorNumber" style="width:100px">
+        </td>
+        <td>
+            <input type="number" id="motorPower" style="width:100px">
+        </td>
+        <td>
+            <input type="number" id="motorPower_Hp" style="width:100px">
+        </td>
+        <td>
+            <select ng-model="selectedType" id="fuelType" style="height:26px;">
+                @foreach (var type in Model.fuelTypes)
+                {
+                    <option value="{{@type.ID}}">@type.TypeName</option>
+                }
+            </select>
+        </td>
+        <td>
+            <input type="number" id="yearOfProduction" style="width:100px">
+        </td>
+        <td>
+            <button class="btn btn-primary" ng-click="SaveVehicleClick()">Dodaj novo vozilo</button>
+        </td>
+    </tr>
+
+@foreach (var item in Model.vehicles) {
+    <tr class="table-rows">
+        <td>
+            <p id="brandName.@item.ID">@Html.DisplayFor(modelItem => item.Brand.BrandName)</p>
+            <select  class="ng-hide" ng-model="selectedVehicle.@item.ID" ng-change="EnableBrandModelsEdit('@item.ID')" id="input.brandName.@item.ID" value="0" style="height:26px; width:100px;">
+                @foreach (var brand in Model.brands)
+                {
+                    <option value="{{@brand.ID}}">@brand.BrandName</option>
+                }
+            </select>
+        </td>
+        <td>
+            <p id="brandModelName.@item.ID"> @Html.DisplayFor(modelItem => item.BrandModel.ModelName)</p>
+            <input type="hidden" id="brandModelValue.@item.ID" value="0">
+            <select class="ng-hide" ng-model="selectedVehicleModel.@item.ID" id="input.brandModelName.@item.ID" ng-options="brandModel.ID as brandModel.ModelName for brandModel in brandModelsEdit" value="{{brandModel.ID}}" style="height:26px; width:100px;">
+                {{brandModel.ModelName}}
+            </select>
+            <input type="hidden" id="input.brandModelNameHelp.@item.ID" value="{{selectedVehicleModel.@item.ID}}" />
+        </td>
+        <td>
+            <p id="chassisNumber.@item.ID">@Html.DisplayFor(modelItem => item.ChassisNumber)</p>
+            <input class="ng-hide" type="number" id="input.chassisNumber.@item.ID" style="width:100px">
+        </td>
+        <td>
+            <p id="motorNumber.@item.ID">@Html.DisplayFor(modelItem => item.MotorNumber)</p>
+            <input class="ng-hide" type="number" id="input.motorNumber.@item.ID" style="width:100px">
+        </td>
+        <td>
+            <p id="motorPower.@item.ID">@Html.DisplayFor(modelItem => item.MotorPower)</p>
+            <input class="ng-hide" type="number" id="input.motorPower.@item.ID" style="width:100px">
+        </td>
+        <td>
+            <p id="motorPower_Hp.@item.ID">@Html.DisplayFor(modelItem => item.MotorPower_Hp)</p>
+            <input class="ng-hide" type="number" id="input.motorPower_Hp.@item.ID" style="width:100px">
+        </td>
+        <td>
+            <p id="fuelType.@item.ID">@Html.DisplayFor(modelItem => item.FuelType.TypeName)</p>
+            <select class="ng-hide" ng-model="selectedType.@item.ID" id="input.fuelType.@item.ID" style="height:26px;">
+                @foreach (var type in Model.fuelTypes)
+                {
+                    <option value="{{@type.ID}}">@type.TypeName</option>
+                }
+            </select>
+        </td>
+        <td>
+            <p id="yearOfProduction.@item.ID">@Html.DisplayFor(modelItem => item.YearOfProduction)</p>
+            <input class="ng-hide" type="number" id="input.yearOfProduction.@item.ID" style="width:100px">
+        </td>
+        <td>
+            <button id="editButton.@item.ID" class="btn btn-info" ng-click="EditVehicle(@item.ID, @item.Brand.ID, @item.BrandModel.ID, @item.ChassisNumber, @item.MotorNumber, @item.MotorPower, @item.MotorPower_Hp, @item.FuelType.ID, @item.YearOfProduction)">Izmijeni</button>
+            <button id="saveButton.@item.ID" class="btn btn-primary ng-hide" ng-click="EditSaveVehicle(@item.ID)">Dodaj</button>
+
+            <button class="btn btn-danger" ng-click="DeleteVehicle(@item.ID, '@item.CanBeDeleted.ToString()')" >Obriši</button>
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,149 @@
+﻿@model VehicleRecord.Models.RecordModel
+
+@{
+    ViewBag.Title = "Index";
+}
+<br>
+<h2 class="topic-class">Putni nalozi</h2>
+<br>
+<br>
+<p id="warningMessage" style="color: red;"></p>
+<table class="table-heading" style="width:1350px;">
+    <tr>
+        <th>
+            <p>Vozilo</p>
+        </th>
+        <th>
+            <p>Datum iznajmljivanja</p>
+        </th>
+        <th>
+            <p>Vrijeme iznajmljivanja</p>
+        </th>
+        <th>
+            <p>Datum povratka</p>
+        </th>
+        <th>
+            <p>Vrijeme povratka</p>
+        </th>
+        <th>
+            <p>Polazna lokacija</p>
+        </th>
+        <th>
+            <p>Dolazna lokacija</p>
+        </th>
+        <th>
+            <p>Ime vozača</p>
+        </th>
+        <th>
+            <p>Prezime vozača</p>
+        </th>
+        <th>
+            <p>Broj putnika</p>
+        </th>
+        <th>
+            <p>Status naloga</p>
+        </th>
+        <th></th>
+    </tr>
+
+
+    <tr class="table-rows">
+        <td>
+            @{var vehicles = Html.Raw(Json.Encode(Model.vehicles)); }
+            <select ng-model="selectedVehicles" id="vehicleId" value="0" style="height:26px; width:180px;">
+                @foreach (var vehicle in Model.vehicles)
+                {
+                    <option value="{{@vehicle.ID}}">@vehicle.Brand.BrandName @vehicle.BrandModel.ModelName @vehicle.ChassisNumber @vehicle.MotorNumber</option>
+                }
+            </select>
+        </td>
+        <td>
+            <input type="date" id="dateFrom" style="width:130px">
+        </td>
+        <td>
+            <input type="time" id="timeFrom" style="width:100px">
+        </td>
+        <td>
+            <input type="date" id="dateTo" style="width:130px">
+        </td>
+        <td>
+            <input type="time" id="timeTo" style="width:100px">
+        </td>
+        <td>
+            <input type="text" id="locationFrom" style="width:100px">
+        </td>
+        <td>
+            <input type="text" id="locationTo" style="width:100px">
+        </td>
+        <td>
+            <input type="text" id="driverName" style="width:100px">
+        </td>
+        <td>
+            <input type="text" id="driverSurname" style="width:100px">
+        </td>
+        <td>
+            <input type="number" id="numberOfPassangers" style="width:50px">
+        </td>
+        <td>
+        </td>
+        <td>
+            <button class="btn btn-primary" ng-click="SaveRecordClick()">Dodaj nalog</button>
+        </td>
+    </tr>
+
+
+@foreach (var item in Model.records) {
+    <tr class="table-rows" style="height:62px;">
+        <td width="190px">
+            @Html.DisplayFor(modelItem => item.Vehicle.Brand.BrandName)
+            @Html.DisplayFor(modelItem => item.Vehicle.BrandModel.ModelName)
+            @Html.DisplayFor(modelItem => item.Vehicle.ChassisNumber)
+            @Html.Raw(" - ")
+            @Html.DisplayFor(modelItem => item.Vehicle.MotorNumber)
+        </td>
+        <td>
+            @{  string showDateFrom = item.DateFrom.Date.ToString("dd/MM/yyyy");}
+            <p id="dateFrom.@item.ID">@showDateFrom</p>
+        </td>
+        <td>
+            <p id="timeFrom.@item.ID">@Html.DisplayFor(modelItem => item.TimeFrom)</p>
+        </td>
+        <td>
+            @{  string showDateTo = item.DateTo.Date.ToString("dd/MM/yyyy");}
+            <p id="dateTo.@item.ID">@showDateTo</p>
+        </td>
+        <td>
+            <p id="timeTo.@item.ID">@Html.DisplayFor(modelItem => item.TimeTo)</p>
+        </td>
+        <td>
+           <p id="locationFrom.@item.ID">@Html.DisplayFor(modelItem => item.LocationFrom)</p>
+        </td>
+        <td>
+            <p id="locationTo.@item.ID">@Html.DisplayFor(modelItem => item.LocationTo)</p>
+        </td>
+        <td>
+            <p id="driverName.@item.ID">@Html.DisplayFor(modelItem => item.DriverName)</p>
+        </td>
+        <td>
+            <p id="driverSurname.@item.ID">@Html.DisplayFor(modelItem => item.DriverSurname)</p>
+        </td>
+        <td>
+           <p id="numberOfPassangers.@item.ID"> @Html.DisplayFor(modelItem => item.NumberOfPassangers)</p>
+        </td>
+        <td>
+            <p id="statusId.@item.ID">@Html.DisplayFor(modelItem => item.Status.StatusName)</p>
+            <select ng-model="selectedStatus.@item.ID" class="ng-hide" id="input.statusId.@item.ID" style="height:26px;">
+                @foreach (var status in Model.statuses)
+                {
+                    <option value="{{@status.ID}}">@status.StatusName</option>
+                }
+            </select>
+        </td>
+        <td>
+            <button id="editButton.@item.ID" class="btn btn-info" ng-click="EditRecord(@item.ID, @item.Status.ID)">Izmijeni</button>
+            <button id="editSaveButton.@item.ID" class="btn btn-primary ng-hide" ng-click="UpdateRecordStatus(@item.ID)">Dodaj</button>
+        </td>
+    </tr>
+}
+
+</table>
